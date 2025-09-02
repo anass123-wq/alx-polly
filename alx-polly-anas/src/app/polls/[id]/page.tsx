@@ -4,6 +4,7 @@ import { PollNavigation } from "@/components/polls/poll-navigation";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Suspense } from "react";
+import { PollResultChart } from "@/components/polls/PollResultChart";
 
 // Mock data - replace with actual data fetching
 async function getPoll(id: string) {
@@ -111,11 +112,17 @@ export default async function PollPage({ params }: { params: { id: string } }) {
     notFound();
   }
 
+  const chartData = poll.options.map(option => ({ option: option.text, votes: option.votes }));
+
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
       <Suspense fallback={<PollDetailsSkeleton />}>
         <PollDetails poll={poll} />
       </Suspense>
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Poll Results</h2>
+        <PollResultChart data={chartData} />
+      </div>
       <PollNavigation currentPollId={params.id} />
     </div>
   );
